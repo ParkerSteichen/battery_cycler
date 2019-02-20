@@ -21,7 +21,7 @@ def import_data(filename, sheet_count):
     return dff
 
 
-def return_cylce_indeces(cycle, cycle_break):
+def return_cycle_indeces(cycle, cycle_break):
     """docstring"""
     cycle_data = []
     start = cycle_break[cycle - 1] + 2
