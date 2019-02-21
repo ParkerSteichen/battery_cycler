@@ -152,7 +152,7 @@ def cycle_range_data(df, cycle_indeces, start_cycle, end_cycle=None):
         range_data = df[df.index.isin(cycle_indeces[start_cycle][0])]
         range_data = pd.concat([range_data,
                                       df[df.index.isin(cycle_indeces[start_cycle][1])]])
-        label = 'Cylce {}'.format(start_cycle)
+        label = 'Cycle {}'.format(start_cycle)
     else:
         cycle_list = np.arange(start_cycle+1, end_cycle+1)
         # initialize dataframe with start_cycle
@@ -165,5 +165,5 @@ def cycle_range_data(df, cycle_indeces, start_cycle, end_cycle=None):
             range_data = pd.concat([range_data, charge_data])
             discharge_data = df[df.index.isin(cycle_indeces[i][1])]
             range_data = pd.concat([range_data, discharge_data])
-        label = 'Cylces {} to {}'.format(start_cycle, end_cycle)
+        label = 'Cycles {} to {}'.format(start_cycle, end_cycle)
     return range_data, label
