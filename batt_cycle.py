@@ -70,3 +70,66 @@ def clean_prep_break(dataframe):
         else:
             pass
     return dataframe2, cycle_break
+
+
+def reshape_cycle_indeces(df, df_break, rest=True):
+    """
+    function that reshapes the outputs of clean_prep_break
+    Inputs:
+    Returns:
+        cylce_indeces, a reshaped dataframe where each cycle is callable
+        by cycle number (example: for the 2nd cycle, the charge indeces
+        for the cycle is at cycle_indeces[2][0], and the discharge data
+        is at cycle_indeces[2][1])
+    """
+    cycle_indeces = []
+    # saves rest data as index[0], if no rest saves None
+    if rest == True:
+        start = df_break[0] + 2
+        end = df_break[1] - 1
+        rest_index = np.arange(start, end)
+        cycle_indeces.append(rest_index)
+        num_cycles = len(df_break)//2
+        if len(df_break) % 2 == 0:
+            drop_partial = True
+        elif len(df_break) % 2 != 0:
+            drop_partial = False
+        if drop_partial == True:
+            for i in np.arange(1, len(df_break)-1, 2):
+                charge_start = df_break[i]+2
+                charge_end = df_break[i+1]-1
+                charge_index = np.arange(charge_start, charge_end)
+                discharge_start = df_break[i+1]+2
+                discharge_end = df_break[i+2]-1
+                discharge_index = np.arange(discharge_start, discharge_end)
+                full_cycle_index = [charge_index, discharge_index]
+                cycle_indeces.append(full_cycle_index)
+        elif drop_partial == False:
+            for i in np.arange(1, len(df_break)-3, 2):
+                charge_start = df_break[i]+2
+                charge_end = df_break[i+1]-1
+                charge_index = np.arange(charge_start, charge_end)
+                discharge_start = df_break[i+1]+2
+                discharge_end = df_break[i+2]-1
+                discharge_index = np.arange(discharge_start, discharge_end)
+                full_cycle_index = [charge_index, discharge_index]
+                cycle_indeces.append(full_cycle_index)
+            i = len(df_break)-2
+            charge_start = df_break[i]+2
+            charge_end = df_break[i+1]-1
+            charge_index = np.arange(charge_start, charge_end)
+            discharge_start = df_break[i+1]+2
+            discharge_end = df.index[-1]
+            discharge_index = np.arange(discharge_start, discharge_end)
+            full_cycle_index = [charge_index, discharge_index]
+            cycle_indeces.append(full_cycle_index)
+    elif rest == False:
+        cycle_indeces.append('No Rest')
+#         num_cycles = len(df_break)//2
+#         if len(df_break) % 2 == 0:
+#             drop_partial = False
+#         elif len(df_break) % 2 != 0:
+#             drop_partial = True
+        print("""feature not currently supported,
+              data must have rest period before first cycle""")
+    return cycle_indeces
