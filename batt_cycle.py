@@ -133,3 +133,36 @@ def reshape_cycle_indeces(df, df_break, rest=True):
         print("""feature not currently supported,
               data must have rest period before first cycle""")
     return cycle_indeces
+
+
+def cycle_range_data(df, cycle_indeces, start_cycle, end_cycle=None):
+    """
+    Function that takes the output of clean_prep_break
+    and reshape_cycle_indeces, as well as a range in the
+    form of start_cycle/end_cycle. end_cycle defaults to None
+    if only a single cycle is called.
+    Returns:
+        cycle_range_data, a dataframe that contains all the data
+        within the specified range
+        label, a string label of the output cycle range for plotting
+    """
+    if end_cycle == None:
+        cycle_list = [start_cycle]
+        range_data = df[df.index.isin(cycle_indeces[start_cycle][0])]
+        range_data = pd.concat([range_data,
+                                      df[df.index.isin(cycle_indeces[start_cycle][1])]])
+        label = 'Cylce {}'.format(start_cycle)
+    else:
+        cycle_list = np.arange(start_cycle+1, end_cycle+1)
+        # initialize dataframe with start_cycle
+        range_data = df[df.index.isin(cycle_indeces[start_cycle][0])]
+        range_data = pd.concat([range_data,
+                                      df[df.index.isin(cycle_indeces[start_cycle][1])]])
+        # append data for all other cycles
+        for i in cycle_list:
+            charge_data = df[df.index.isin(cycle_indeces[i][0])]
+            range_data = pd.concat([range_data, charge_data])
+            discharge_data = df[df.index.isin(cycle_indeces[i][1])]
+            range_data = pd.concat([range_data, discharge_data])
+        label = 'Cylces {} to {}'.format(start_cycle, end_cycle)
+    return range_data, label
