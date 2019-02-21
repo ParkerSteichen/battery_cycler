@@ -89,7 +89,8 @@ def reshape_cycle_indeces(df, df_break, rest=True):
         end = df_break[1] - 1
         rest_index = np.arange(start, end)
         cycle_indeces.append(rest_index)
-        num_cycles = len(df_break)//2
+        num_cycles = (len(df_break)-1)//2
+        print('Number of Cycles = {}'.format(num_cycles))
         if len(df_break) % 2 == 0:
             drop_partial = True
         elif len(df_break) % 2 != 0:
