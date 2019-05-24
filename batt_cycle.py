@@ -72,6 +72,50 @@ def clean_prep_break(dataframe):
     return dataframe2, cycle_break
 
 
+def clean_prep_break_batt(dataframe):
+    """
+    function that removes labels from in between cycles,
+    adds a new column which contains the time in seconds,
+    and outputs a list of cycle_breaks
+    
+    QUICK REWRITE OF clean_prep_break THAT IS FOR LSB not Li/Li CELLS DO TO Charge C-Rate vs Charge CC
+    """
+    drop = ['Mode', 'Rest', 'Charge C-Rate', 'Discharge C-Rate', 'TestTime']
+    times = dataframe['time']
+    drop_index = []
+    index = []
+    for i in range(len(dataframe['time'])):
+        time_0 = str(times[i])
+        if time_0 in drop:
+            drop_index.append(i)
+        else:
+            index.append(i)   
+    dataframe2 = dataframe.drop(drop_index)
+    # add column with time converted to seconds
+    t_sec = []
+    times = dataframe2['time']
+    for i in range(len(dataframe2['time'])):
+        j = index[i]
+        time_0 = str(times[j])
+        if len(time_0) < 10:
+            days = 0
+            hours, minutes, seconds = time_0.split(':')
+        else:
+            days, time = time_0.split('-')
+            hours, minutes, seconds = time.split(':')
+        sec = int(days)*86400 + int(hours)*3600 + int(minutes)*60 + int(seconds)
+        t_sec.append(sec)
+    dataframe2['time_sec'] = t_sec
+    # converts drop_index to a list of cycle_breaks
+    cycle_break = []
+    for i in range(len(dataframe.index)):
+        if i - 1 in drop_index and i + 1 in drop_index:
+            cycle_break.append(i)
+        else:
+            pass
+    return dataframe2, cycle_break
+
+
 def reshape_cycle_indeces(df, df_break, rest=True):
     """
     function that reshapes the outputs of clean_prep_break
