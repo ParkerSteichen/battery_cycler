@@ -2,6 +2,9 @@
 A set a functions for plotting battery cycle performance data.
 """
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 def cv_cycle_plot(ax, clean_dataframe, cycle_list, cycle_num, plot_color, plot_alpha, label=None):
     """
     docstring
@@ -14,7 +17,7 @@ def cv_cycle_plot(ax, clean_dataframe, cycle_list, cycle_num, plot_color, plot_a
             print('First cycle only contains discharge data')
             discharge_indeces = cycle_list[cycle_num-1][0]
             discharge_dataframe = clean_dataframe[clean_dataframe.index.isin(discharge_indeces)]
-            ax.plot(discharge_dataframe['capacity'],
+            ax.plot(discharge_dataframe['scapacity'],
                     discharge_dataframe['voltage'],
                     color=plot_color,
                     alpha=plot_alpha)
@@ -22,7 +25,7 @@ def cv_cycle_plot(ax, clean_dataframe, cycle_list, cycle_num, plot_color, plot_a
             print('Incomplete cycle, only contains charge data')
             charge_indeces = cycle_list[cycle_num-1][0]
             charge_dataframe = clean_dataframe[clean_dataframe.index.isin(charge_indeces)]
-            ax.plot(charge_dataframe['capacity'],
+            ax.plot(charge_dataframe['scapacity'],
                     charge_dataframe['voltage'],
                     color=plot_color,
                     alpha=plot_alpha)
@@ -33,11 +36,11 @@ def cv_cycle_plot(ax, clean_dataframe, cycle_list, cycle_num, plot_color, plot_a
         discharge_indeces = cycle_list[cycle_num-1][1]
         discharge_dataframe = clean_dataframe[clean_dataframe.index.isin(discharge_indeces)]
         # now plot charge and discharge curves
-        ax.plot(charge_dataframe['capacity'],
+        ax.plot(charge_dataframe['scapacity'],
                 charge_dataframe['voltage'],
                 color=plot_color,
                 alpha=plot_alpha)
-        ax.plot(discharge_dataframe['capacity'],
+        ax.plot(discharge_dataframe['scapacity'],
                 discharge_dataframe['voltage'],
                 color=plot_color,
                 alpha=plot_alpha)

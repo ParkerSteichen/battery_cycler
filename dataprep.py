@@ -41,9 +41,17 @@ def clean_prep_break(dataframe):
     dataframe2 = dataframe.drop(drop_index)
     # add column with time converted to seconds
     t_sec = []
+    step_t_sec = []
     times = dataframe2['test_time']
+    step_times = dataframe2['step_time']
     for i in range(len(dataframe2['test_time'])):
         j = index[i]
+        # first convert step time to seconds
+        step_time_0 = str(step_times[j])
+        hours, minutes, seconds = step_time_0.split(':')
+        sec = int(hours)*3600 + int(minutes)*60 + int(seconds)
+        step_t_sec.append(sec)
+        # next convert overall time to seconds
         time_0 = str(times[j])
         if len(time_0) < 10:
             days = 0
@@ -53,6 +61,7 @@ def clean_prep_break(dataframe):
             hours, minutes, seconds = time.split(':')
         sec = int(days)*86400 + int(hours)*3600 + int(minutes)*60 + int(seconds)
         t_sec.append(sec)
+    dataframe2['step_time_sec'] = step_t_sec
     dataframe2['test_time_sec'] = t_sec
     # converts drop_index to a list of cycle_breaks
     cycle_break = []
