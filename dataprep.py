@@ -113,3 +113,20 @@ def plotprep(filename, sheet_count, rest=True, reverse=True):
     clean_dataframe, cycle_break = clean_prep_break(dataframe)
     cycle_list = return_cycle_list(clean_dataframe, cycle_break, rest, reverse)
     return clean_dataframe, cycle_list
+
+
+def pickle_store(clean_dataframe, cycle_list, filename):
+    """
+    docstring
+    """
+    pickle_data = [clean_dataframe, cycle_list]
+    pickle.dump(pickle_data, open('example_pickle.pickle', 'wb'))
+    print('cycling data stored to {}'.format(filename))
+
+
+def pickle_load(filename):
+    """
+    docstring
+    """
+    clean_dataframe, cycle_list = pickle.load(open(filename, 'rb'))
+    return clean_dataframe, cycle_list    
